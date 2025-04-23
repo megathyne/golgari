@@ -1,0 +1,42 @@
+services:
+  golgari-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: "npm run start:debug"
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=AKIA2KTJOVSKOBNDFYU4
+      - AWS_SECRET_ACCESS_KEY=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
+      - ENV=LOCAL
+      - PORT=3000
+      - LOG_LEVEL=info
+      - PRETTY_PRINT=false
+      - DATABASE_HOST=golgari-database
+      - DATABASE_PORT=5432
+      - DATABASE_DATABASE=golgari
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=dert8jQR0yuUveR450vvWr
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    networks:
+      - golgari_network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  golgari-database:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=dert8jQR0yuUveR450vvWr
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=golgari
+    networks:
+      - golgari_network
+networks:
+  golgari_network:
+    external: false

@@ -1,0 +1,47 @@
+name: deploy
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deploy to (test, production)
+        required: true
+
+jobs:
+  deploy:
+    if: contains(fromJson('["test",  "production"]'), github.event.inputs.environment)
+    name: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE }}
+          aws-region: us-east-1
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        env:
+          REGISTRY: ${{ secrets.REGISTRY_URL }}
+          REPOSITORY: ${{ secrets.IMAGE_NAME }}
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG . -f Dockerfile
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Redeploy ECS Service
+        env:
+          SERVICE: ${{ secrets.ECS_SERVICE }}
+          CLUSTER: ${{ secrets.ECS_CLUSTER }}
+        run: |
+          aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
