@@ -14,10 +14,7 @@ export class BlogController {
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get all blogs" })
   @Get()
-  public async getBlogPosts(
-    @Headers() headers: Headers,
-  ): Promise<any> {
-    const { } = await this.authService.verify(headers);
+  public async getBlogPosts(): Promise<any> {
     return await this.blogService.getBlogPosts();
   }
 }

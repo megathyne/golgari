@@ -16,7 +16,6 @@ export class UserProfileController {
   @ApiOperation({ summary: "Get profile" })
   @Get()
   public async getSettings(@Headers() headers: Headers): Promise<any> {
-    const {} = await this.authService.verify(headers);
     return await this.userProfileService.get();
   }
 }

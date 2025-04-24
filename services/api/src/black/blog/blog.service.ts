@@ -7,5 +7,7 @@ export class BlogService {
 
   public async getBlogPosts() {
     this.logger.log({ arguments: {}, function: this.getBlogPosts.name });
+
+    return ["blog", "blog", "blog"];
   }
 }
