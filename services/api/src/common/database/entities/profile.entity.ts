@@ -4,4 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 export class Profile extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  email: string;
 }

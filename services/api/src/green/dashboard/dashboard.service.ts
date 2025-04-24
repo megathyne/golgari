@@ -5,7 +5,7 @@ import { GetDashboardResponseDto } from "./dto/get-dashboard-response.dto";
 export class DashboardService {
   constructor() {}
 
-  public async getDashboard(uid: string): Promise<GetDashboardResponseDto> {
+  public async getDashboard(): Promise<GetDashboardResponseDto> {
     return {};
   }
 }

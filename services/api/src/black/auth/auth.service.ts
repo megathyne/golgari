@@ -28,7 +28,7 @@ export class AuthService {
     if (!user) throw new UnauthorizedException();
 
     const payload = { sub: user.id, username: user.username };
-    return { accessToken: await this.jwtService.signAsync(payload) };
+    return { accessToken: await this.jwtService.signAsync(payload, { expiresIn: "1h" }) };
   }
 
   public async create({ username, password }: CreateUserDto): Promise<{ accessToken: string }> {

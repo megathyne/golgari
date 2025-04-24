@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, Query } from "@nestjs/common";
+import { Controller, Get, Headers, HttpCode, HttpStatus, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { BlogService } from "./blog.service";
 import { AuthService } from "../auth/auth.service";
@@ -7,10 +7,10 @@ import { AuthService } from "../auth/auth.service";
 @Controller("black/blog")
 export class BlogController {
   constructor(
-    private readonly authService: AuthService,
     private readonly blogService: BlogService,
   ) {}
 
+  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get all blogs" })
   @Get()
