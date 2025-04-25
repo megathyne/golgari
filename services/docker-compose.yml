@@ -28,7 +28,7 @@ services:
       - ./api:/usr/src/app
       - /usr/src/app/node_modules
   golgari-database:
-    image: postgres:latest
+    image: postgres:16.8
     restart: always
     ports:
       - "5432:5432"

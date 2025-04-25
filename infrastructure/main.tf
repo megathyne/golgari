@@ -5,7 +5,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-nereus"
+    bucket  = "terraform-state-golgari"
     key     = "terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
@@ -15,7 +15,7 @@ terraform {
 # VPC
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
-  tags       = { Name = "nereus-vpc" }
+  tags       = { Name = "golgari-vpc" }
 }
 
 resource "aws_subnet" "public" {
@@ -23,27 +23,27 @@ resource "aws_subnet" "public" {
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
-  tags                    = { Name = "nereus-public-subnet" }
+  tags                    = { Name = "golgari-public-subnet" }
 }
 
 resource "aws_subnet" "private1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1a"
-  tags              = { Name = "nereus-private1-subnet" }
+  tags              = { Name = "golgari-private1-subnet" }
 }
 
 resource "aws_subnet" "private2" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-1b"
-  tags              = { Name = "nereus-private2-subnet" }
+  tags              = { Name = "golgari-private2-subnet" }
 }
 
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
-  tags   = { Name = "nereus-internet-gateway" }
+  tags   = { Name = "golgari-internet-gateway" }
 }
 
 resource "aws_route_table" "public" {
@@ -52,7 +52,7 @@ resource "aws_route_table" "public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gw.id
   }
-  tags = { Name = "nereus-route-table" }
+  tags = { Name = "golgari-route-table" }
 }
 
 resource "aws_route_table_association" "public" {
@@ -61,8 +61,8 @@ resource "aws_route_table_association" "public" {
 }
 
 # ECR
-resource "aws_ecr_repository" "nereus" {
-  name                 = "nereus"
+resource "aws_ecr_repository" "golgari" {
+  name                 = "golgari"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -72,7 +72,7 @@ resource "aws_ecr_repository" "nereus" {
 
 # RDS
 resource "aws_security_group" "rds" {
-  name        = "nereus-rds-sg"
+  name        = "golgari-rds-sg"
   description = "Allow PostgreSQL access"
   vpc_id      = aws_vpc.main.id
 
@@ -91,31 +91,31 @@ resource "aws_security_group" "rds" {
   }
 }
 
-resource "aws_db_subnet_group" "nereus" {
-  name       = "nereus-db-subnet-group"
+resource "aws_db_subnet_group" "golgari" {
+  name       = "golgari-db-subnet-group"
   subnet_ids = [aws_subnet.private1.id, aws_subnet.private2.id] # Use private subnet(s)
 }
 
 resource "aws_db_instance" "postgres" {
-  identifier             = "nereus-postgres"
+  identifier             = "golgari-postgres"
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   engine                 = "postgres"
-  engine_version         = "14.1"
+  engine_version         = "16.8"
   username               = "postgres_admin"
   password               = var.db_password
-  db_name                = "nereusdb"
+  db_name                = "golgaridb"
   skip_final_snapshot    = true
   publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.rds.id]
-  db_subnet_group_name   = aws_db_subnet_group.nereus.name
-  parameter_group_name   = "default.postgres14"
+  db_subnet_group_name   = aws_db_subnet_group.golgari.name
+  parameter_group_name   = "default.postgres16"
   availability_zone      = "us-east-1a"
 }
 
 # ECS Cluster
-resource "aws_ecs_cluster" "nereus" {
-  name = "nereus-fargate-cluster"
+resource "aws_ecs_cluster" "golgari" {
+  name = "golgari-fargate-cluster"
 }
 
 # ECS Task Execution Role (required for Fargate tasks)
@@ -139,8 +139,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_ecs_task_definition" "nereus" {
-  family                   = "nereus-task"
+resource "aws_ecs_task_definition" "golgari" {
+  family                   = "golgari-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -149,8 +149,8 @@ resource "aws_ecs_task_definition" "nereus" {
 
   container_definitions = jsonencode([
     {
-      name      = "nereus-app"
-      image     = aws_ecr_repository.nereus.repository_url
+      name      = "golgari-app"
+      image     = aws_ecr_repository.golgari.repository_url
       essential = true
       portMappings = [
         {
@@ -164,9 +164,9 @@ resource "aws_ecs_task_definition" "nereus" {
 }
 
 resource "aws_ecs_service" "main" {
-  name            = "nereus-service"
-  cluster         = aws_ecs_cluster.nereus.id
-  task_definition = aws_ecs_task_definition.nereus.arn
+  name            = "golgari-service"
+  cluster         = aws_ecs_cluster.golgari.id
+  task_definition = aws_ecs_task_definition.golgari.arn
   launch_type     = "FARGATE"
   desired_count   = 1
 
