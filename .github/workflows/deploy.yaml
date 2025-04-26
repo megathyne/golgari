@@ -26,8 +26,8 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          # ECR_REGISTRY: 475250635549.dkr.ecr.us-east-1.amazonaws.com
+          # ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: 475250635549.dkr.ecr.us-east-1.amazonaws.com
           # ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           ECR_REPOSITORY: golgari
           # IMAGE_TAG: ${{ github.sha }}
