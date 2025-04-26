@@ -194,7 +194,7 @@ resource "aws_security_group" "ecs" {
 }
 
 output "aws_ecr_repository" {
-  value = aws_ecr_repository.golgari.name
+  value = aws_ecr_repository.golgari.registry_id
 }
 
 output "aws_ecs_cluster" {
