@@ -193,3 +193,19 @@ resource "aws_security_group" "ecs" {
   }
 }
 
+output "aws_ecr_repository" {
+  value = aws_ecr_repository.golgari.name
+}
+
+output "aws_ecs_cluster" {
+  value = aws_ecs_cluster.golgari.name
+}
+
+output "aws_ecs_service" {
+  value = aws_ecs_service.main.name
+}
+
+output "aws_ecs_task_definition" {
+  value = aws_ecs_task_definition.golgari.id
+}
+
