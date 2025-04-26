@@ -2,21 +2,14 @@ name: Deploy to Amazon ECS
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: deploy to AWS (development, production)
-        required: true
 
 jobs:
   deploy:
-    if: contains(fromJson('["development", "production"]'), github.event.inputs.environment)
     name: Deploy
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
-    environment:
-      name: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout
