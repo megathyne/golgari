@@ -4,12 +4,15 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Profile } from "./profile.entity";
 import { Exclude } from "class-transformer";
+import { Chat } from "./chat.entity";
+import { Friendship } from "./friendship.entity";
 
 @Entity()
 export class Users extends BaseEntity {
@@ -26,6 +29,15 @@ export class Users extends BaseEntity {
   @OneToOne(() => Profile, { eager: true })
   @JoinColumn({ name: "profile_id" })
   profile: Profile;
+
+  @OneToMany(() => Chat, (chat) => chat.user, { eager: true })
+  chat: Chat[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.requestor, { eager: true })
+  sentFriendRequests: Friendship[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.recipient, { eager: true })
+  receivedFriendRequests: Friendship[];
 
   @Exclude()
   @CreateDateColumn({ name: "created_at" })

@@ -20,10 +20,7 @@ export class UserService {
     await this.usersRepository.save(newUser);
   }
 
-  public async get(id: number): Promise<Users> {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    if (user) throw new BadRequestException();
-
-    return user;
+  public async getById(id: number): Promise<Users> {
+    return await this.usersRepository.findOne({ where: { id } });
   }
 }
