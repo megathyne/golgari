@@ -5,7 +5,7 @@ import { Profile } from "./entities/profile.entity";
 import { LOCAL_TYPE } from "../constants";
 import { Url } from "./entities/url.entity";
 import { Chat } from "./entities/chat.entity";
-import { Friendship } from "./entities/friendship.entity";
+import { Friends } from "./entities/friend.entity";
 
 const config = {
   type: "postgres",
@@ -15,7 +15,7 @@ const config = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DATABASE,
   logging: false,
-  entities: [Chat, Friendship, Profile, Url, Users],
+  entities: [Chat, Friends, Profile, Url, Users],
   synchronize: true,
   ssl: process.env.ENV === LOCAL_TYPE ? false : true,
   extra: process.env.ENV === LOCAL_TYPE ? {} : { ssl: { rejectUnauthorized: false } },

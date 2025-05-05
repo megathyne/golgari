@@ -8,9 +8,10 @@ import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./auth/auth.guard";
 import { UrlShortenerModule } from "./url-shortener/url-shortener.module";
 import { ChatModule } from "./chat/chat.module";
+import { FriendModule } from './friend/friend.module';
 
 @Module({
-  imports: [AuthModule, BlogModule, DatabaseModule, UserModule, UserProfileModule, UrlShortenerModule, ChatModule],
+  imports: [AuthModule, BlogModule, DatabaseModule, UserModule, UserProfileModule, UrlShortenerModule, ChatModule, FriendModule],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class BlackModule {}

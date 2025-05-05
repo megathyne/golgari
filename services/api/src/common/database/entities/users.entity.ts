@@ -12,7 +12,7 @@ import {
 import { Profile } from "./profile.entity";
 import { Exclude } from "class-transformer";
 import { Chat } from "./chat.entity";
-import { Friendship } from "./friendship.entity";
+import { Friends as Friends } from "./friend.entity";
 
 @Entity()
 export class Users extends BaseEntity {
@@ -33,11 +33,11 @@ export class Users extends BaseEntity {
   @OneToMany(() => Chat, (chat) => chat.user, { eager: true })
   chat: Chat[];
 
-  @OneToMany(() => Friendship, (friendship) => friendship.requestor, { eager: true })
-  sentFriendRequests: Friendship[];
+  @OneToMany(() => Friends, (friendship) => friendship.requestor, { eager: true })
+  sentFriendRequests: Friends[];
 
-  @OneToMany(() => Friendship, (friendship) => friendship.recipient, { eager: true })
-  receivedFriendRequests: Friendship[];
+  @OneToMany(() => Friends, (friendship) => friendship.recipient, { eager: true })
+  receivedFriendRequests: Friends[];
 
   @Exclude()
   @CreateDateColumn({ name: "created_at" })

@@ -2,14 +2,14 @@ import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
 import { Users } from "./users.entity";
 
-export enum FriendshipStatus {
+export enum FriendStatus {
   PENDING = "PENDING",
   ACCEPTED = "ACCEPTED",
   DECLINED = "DECLINED",
 }
 
 @Entity()
-export class Friendship extends BaseEntity {
+export class Friends extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,10 +21,10 @@ export class Friendship extends BaseEntity {
 
   @Column({
     type: "enum",
-    enum: FriendshipStatus,
-    default: FriendshipStatus.PENDING,
+    enum: FriendStatus,
+    default: FriendStatus.PENDING,
   })
-  status: FriendshipStatus;
+  status: FriendStatus;
 
   @Exclude()
   @CreateDateColumn({ name: "created_at" })
