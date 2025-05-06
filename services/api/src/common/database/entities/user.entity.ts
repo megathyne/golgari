@@ -13,9 +13,10 @@ import { Profile } from "./profile.entity";
 import { Exclude } from "class-transformer";
 import { Chat } from "./chat.entity";
 import { Friends as Friends } from "./friend.entity";
+import { Url } from "./url.entity";
 
 @Entity()
-export class Users extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,6 +30,9 @@ export class Users extends BaseEntity {
   @OneToOne(() => Profile, { eager: true })
   @JoinColumn({ name: "profile_id" })
   profile: Profile;
+
+  @OneToMany(() => Url, (url) => url.user, { eager: true })
+  urls: Url[];
 
   @OneToMany(() => Chat, (chat) => chat.user, { eager: true })
   chat: Chat[];

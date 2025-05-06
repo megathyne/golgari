@@ -2,21 +2,22 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
 import { Url } from "src/common/database/entities/url.entity";
+import { User } from "src/common/database/entities/user.entity";
 import { Repository } from "typeorm";
-import { ExceptionHandler } from "winston";
 
 @Injectable()
 export class UrlShortenerService {
   constructor(@InjectRepository(Url) private urlRepository: Repository<Url>) {}
 
-  private async generateBase64Token(length: number): Promise<string> {
-    const buffer = randomBytes(Math.ceil((length * 3) / 4)); // Generate enough random bytes
-    return buffer
-      .toString("base64") // Convert to Base64
-      .replace(/\+/g, "-") // URL-safe: replace + with -
-      .replace(/\//g, "_") // URL-safe: replace / with _
-      .replace(/=+$/, "") // Remove padding
-      .slice(0, length); // Ensure fixed length
+  private async generateShortCode(length: number): Promise<string> {
+    const BASE_62_VALUES = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const bytes = randomBytes(length);
+    let shortCode = "";
+
+    for (let i = 0; i < length; i++) {
+      shortCode += BASE_62_VALUES[bytes[i] % BASE_62_VALUES.length];
+    }
+    return shortCode;
   }
 
   private async generateExpirationDate() {
@@ -51,7 +52,7 @@ export class UrlShortenerService {
     return existingUrl.origUrl;
   }
 
-  public async createShortUrl(origUrl: string): Promise<string> {
+  public async createShortUrl(user: User, origUrl: string): Promise<string> {
     // Check if an entry already exists, if true, return
     const existingUrl = await this.urlRepository.findOne({ where: { origUrl } });
     if (existingUrl) return existingUrl.shortUrl;
@@ -61,12 +62,10 @@ export class UrlShortenerService {
     if (!isValid) throw new BadRequestException("invalid url");
 
     // Create a short url and then check to see if it exists
-    let shortUrl = await this.generateBase64Token(8);
-    let existingShortUrl = await this.urlRepository.findOne({ where: { shortUrl } });
-
     // If it does, retry
+    let existingShortUrl, shortUrl;
     while (existingShortUrl) {
-      shortUrl = await this.generateBase64Token(8);
+      shortUrl = await this.generateShortCode(7);
       existingShortUrl = await this.urlRepository.findOne({ where: { shortUrl } });
     }
 
@@ -81,5 +80,13 @@ export class UrlShortenerService {
     await this.urlRepository.save(url);
 
     return shortUrl;
+  }
+
+  public async deleteShortUrl(user: User, id: number): Promise<void> {
+    // Check to see if the entry exists and the current user owns it
+    const existingShortUrl = await this.urlRepository.findOne({ where: { id, user } });
+    if (!existingShortUrl) throw new NotFoundException();
+
+    await this.urlRepository.delete(id);
   }
 }

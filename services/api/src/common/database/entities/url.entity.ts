@@ -1,10 +1,14 @@
 import { Exclude } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
+import { User } from "./user.entity";
 
 @Entity()
 export class Url extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => User, (user) => user.urls)
+  user: User;
 
   @Column({ name: "orig_url", nullable: false })
   origUrl: string;

@@ -9,9 +9,10 @@ import { AuthGuard } from "./auth/auth.guard";
 import { UrlShortenerModule } from "./url-shortener/url-shortener.module";
 import { ChatModule } from "./chat/chat.module";
 import { FriendModule } from './friend/friend.module';
+import { RateLimiterModule } from './rate-limiter/rate-limiter.module';
 
 @Module({
-  imports: [AuthModule, BlogModule, DatabaseModule, UserModule, UserProfileModule, UrlShortenerModule, ChatModule, FriendModule],
+  imports: [AuthModule, BlogModule, DatabaseModule, UserModule, UserProfileModule, UrlShortenerModule, ChatModule, FriendModule, RateLimiterModule],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class BlackModule {}

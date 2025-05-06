@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { UserService } from "./user.service";
 import { Repository } from "typeorm";
-import { Users } from "../../common/database/entities/users.entity";
+import { User } from "../../common/database/entities/user.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
 export type MockType<T> = { [P in keyof T]?: jest.Mock<{}> };
@@ -13,7 +13,7 @@ export const repositoryMockFactory: () => MockType<Repository> = jest.fn(() => (
 
 describe("UserService", () => {
   let service: UserService;
-  let usersRepositoryMock: MockType<Repository<Users>>;
+  let usersRepositoryMock: MockType<Repository<User>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +21,7 @@ describe("UserService", () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    usersRepositoryMock = module.get(getRepositoryToken(Users));
+    usersRepositoryMock = module.get(getRepositoryToken(User));
   });
 
   it("should be defined", () => {

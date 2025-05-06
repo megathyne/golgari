@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
-import { Users } from "./users.entity";
+import { User } from "./user.entity";
 
 export enum FriendStatus {
   PENDING = "PENDING",
@@ -13,11 +13,11 @@ export class Friends extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.sentFriendRequests)
-  requestor: Users;
+  @ManyToOne(() => User, (user) => user.sentFriendRequests)
+  requestor: User;
 
-  @ManyToOne(() => Users, (user) => user.receivedFriendRequests)
-  recipient: Users;
+  @ManyToOne(() => User, (user) => user.receivedFriendRequests)
+  recipient: User;
 
   @Column({
     type: "enum",

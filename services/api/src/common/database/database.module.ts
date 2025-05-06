@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { Users } from "./entities/users.entity";
+import { User } from "./entities/user.entity";
 import { Profile } from "./entities/profile.entity";
 import { LOCAL_TYPE } from "../constants";
 import { Url } from "./entities/url.entity";
@@ -15,7 +15,7 @@ const config = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DATABASE,
   logging: false,
-  entities: [Chat, Friends, Profile, Url, Users],
+  entities: [Chat, Friends, Profile, Url, User],
   synchronize: true,
   ssl: process.env.ENV === LOCAL_TYPE ? false : true,
   extra: process.env.ENV === LOCAL_TYPE ? {} : { ssl: { rejectUnauthorized: false } },

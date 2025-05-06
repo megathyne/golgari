@@ -1,6 +1,6 @@
 import { HttpException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { VerifyResponseDto } from "./dto/verify-response.dto";
-import { Users } from "src/common/database/entities/users.entity";
+import { User } from "src/common/database/entities/user.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { JwtService } from "@nestjs/jwt";
@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
   public async login({ username, password }: LoginUserDto): Promise<{ accessToken: string }> {

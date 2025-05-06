@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
-import { Users } from "./users.entity";
+import { User } from "./user.entity";
 
 
 @Entity()
@@ -8,8 +8,8 @@ export class Chat extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.chat)
-  user: Users
+  @ManyToOne(() => User, (user) => user.chat)
+  user: User
 
   @Column()
   message: string;

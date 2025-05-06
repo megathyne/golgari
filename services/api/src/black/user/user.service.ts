@@ -2,13 +2,13 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { Users } from "../../common/database/entities/users.entity";
+import { User } from "../../common/database/entities/user.entity";
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
 
-  constructor(@InjectRepository(Users) private usersRepository: Repository<Users>) {}
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
 
   public async create({ username, password }: CreateUserDto): Promise<void> {
     const existingUser = await this.usersRepository.findOne({ where: { username } });
@@ -20,7 +20,7 @@ export class UserService {
     await this.usersRepository.save(newUser);
   }
 
-  public async getById(id: number): Promise<Users> {
+  public async getById(id: number): Promise<User> {
     return await this.usersRepository.findOne({ where: { id } });
   }
 }

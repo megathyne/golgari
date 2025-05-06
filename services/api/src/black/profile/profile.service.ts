@@ -1,7 +1,7 @@
 import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile } from "src/common/database/entities/profile.entity";
-import { Users } from "src/common/database/entities/users.entity";
+import { User } from "src/common/database/entities/user.entity";
 import { Repository } from "typeorm";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 
@@ -11,7 +11,7 @@ export class UserProfileService {
 
   constructor(
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
-    @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
   public async update(id: number, updateProfileDto: UpdateProfileDto): Promise<void> {
