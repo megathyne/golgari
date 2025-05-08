@@ -31,14 +31,16 @@ Leaky Bucket (used in streaming services)
     - requests are in a bucket and are leaked out in a constant rate
     - if the bucket overflows, the excess requests are sent to a retry queue
 
-Fixed window algorithm
+Fixed Window Counter
     - works by dividing the time into fixed intervals or windows
     - the number of requests is counted in each window
     - when the limit is reached within a window
     - additional requests are blocked untill the next window starts
     - easy to implement, but it can lead to bursts at window boundries
 
-Sliding window algorithm
+Sliding Window Log
+
+Sliding Window Counter
     - similar to fixed window but instead it continusly tracks the number of requests in the past defined period 
     - as time moves forward, it removes old requests and adds new ones
     - fixes the burst issue seen in the fixed window by distributing request limits more evenly over time
